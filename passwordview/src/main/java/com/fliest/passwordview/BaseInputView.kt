@@ -216,7 +216,7 @@ open class BaseInputView : AppCompatEditText, InputViewDrawEvent {
                 repeatMode = ValueAnimator.RESTART
                 repeatCount = ValueAnimator.INFINITE
             }
-            .start()
+            //.start()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

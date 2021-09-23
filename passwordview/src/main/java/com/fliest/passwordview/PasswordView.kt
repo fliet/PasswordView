@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -41,6 +42,7 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
     private lateinit var dotPaint: Paint
     private lateinit var starPaint: Paint
     private val delayTimeHandler = DelayTimeHandler()
+    private val rect = Rect()
 
     init {
         initAttrs()
@@ -100,15 +102,47 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
     }
 
     private fun drawPlaintext(canvas: Canvas, textPaint: Paint) {
+        if (boxMargin == 0f) {
+            drawTextWithoutMargin(canvas)
+        } else {
+            drawTextWithMargin(canvas)
+        }
 
+    }
+
+    private fun drawTextWithoutMargin(canvas: Canvas) {
+
+        val totalWidth = width
+        val innerTotalWidth = totalWidth - boxStrokeWidth * (boxCount + 1)
+        val avgWidth = innerTotalWidth / (boxCount * 1.0f)
+
+
+        val height = height
+        val cy = height / 2f
+
+        val index = charList.size - 1
+        val text = charList[index].toString()
+        val dx: Float = textPaint.measureText("8") / 2.0f
+        textPaint.getTextBounds("8", 0, 1, rect)
+
+        val dy: Float = (rect.top + rect.bottom) / 2.0f
+        val left = boxStrokeWidth * (index + 1) + avgWidth * index
+        val startX: Float = left + avgWidth / 2
+
+        canvas.drawText(text, startX - dx, cy - dy, textPaint)
+    }
+
+    private fun drawTextWithMargin(canvas: Canvas) {
         var left = 0f
         val height = height
         val cy = height / 2f
 
         val index = charList.size - 1
         val text = charList[index].toString()
-        val dx: Float = textPaint.measureText(text) / 2
-        val dy = (textPaint.fontMetrics.ascent + textPaint.fontMetrics.descent) / 2
+        val dx: Float = textPaint.measureText("8") / 2.0f
+        textPaint.getTextBounds("8", 0, 1, rect)
+
+        val dy: Float = (rect.top + rect.bottom) / 2.0f
         if (index != 0) left += (boxMargin + boxWidth) * index
         val startX: Float = left + boxWidth / 2
 
@@ -123,6 +157,16 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
     }
 
     private fun drawCoverDot(canvas: Canvas) {
+
+        if (boxMargin == 0f) {
+            drawCoverDotWithoutMargin(canvas)
+        } else {
+            drawCoverDotWithMargin(canvas)
+        }
+
+    }
+
+    private fun drawCoverDotWithMargin(canvas: Canvas) {
         var left = boxStrokeWidth / 2
         val height = height
         val cy = height / 2f
@@ -133,14 +177,39 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
         }
     }
 
+    private fun drawCoverDotWithoutMargin(canvas: Canvas) {
+        val totalWidth = width
+        val innerTotalWidth = totalWidth - boxStrokeWidth * (boxCount + 1)
+        val avgWidth = innerTotalWidth / (boxCount * 1.0f)
+
+        var startX = boxStrokeWidth + avgWidth / 2
+        val height = height
+        val cy = height / 2f
+        for (i in 0 until coverCount) {
+            canvas.drawCircle(startX, cy, dotRadius, dotPaint)
+            startX += boxStrokeWidth + avgWidth
+        }
+    }
+
     private fun drawCoverStar(canvas: Canvas, textPaint: Paint) {
         if (charList.size == 0) return
 
+        if (boxMargin == 0f) {
+            drawCoverStarWithoutMargin(canvas)
+        } else {
+            drawCoverStarWithMargin(canvas)
+        }
+
+
+    }
+
+    private fun drawCoverStarWithMargin(canvas: Canvas) {
         var left = 0f
         var startX: Float = left + boxWidth / 2.0f
         val cy = height / 2.0f
         val dx: Float = starPaint.measureText("*") / 2.0f
-        val dy = (starPaint.fontMetrics.ascent + starPaint.fontMetrics.descent) / 2.0f
+        starPaint.getTextBounds("*", 0, 1, rect)
+        val dy: Float = (rect.top + rect.bottom) / 2.0f
 
         for (i in 0 until coverCount) {
             canvas.drawText("*", startX - dx, cy - dy, starPaint)
@@ -148,6 +217,26 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
             startX = left + boxWidth / 2.0f
         }
     }
+
+    private fun drawCoverStarWithoutMargin(canvas: Canvas) {
+        val totalWidth = width
+        val innerTotalWidth = totalWidth - boxStrokeWidth * (boxCount + 1)
+        val avgWidth = innerTotalWidth / (boxCount * 1.0f)
+
+        var left = boxStrokeWidth
+        var startX: Float = left + avgWidth / 2.0f
+        val cy = height / 2.0f
+        val dx: Float = starPaint.measureText("*") / 2.0f
+        starPaint.getTextBounds("*", 0, 1, rect)
+        val dy: Float = (rect.top + rect.bottom) / 2.0f
+
+        for (i in 0 until coverCount) {
+            canvas.drawText("*", startX - dx, cy - dy, starPaint)
+            left += avgWidth + boxStrokeWidth
+            startX = left + avgWidth / 2.0f
+        }
+    }
+
 
     override fun onTextChange(s: CharSequence, start: Int, before: Int, count: Int) {
         val preNumListCount = charList.size

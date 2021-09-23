@@ -27,7 +27,7 @@
         app:cursor_height="20dp"
         app:cursor_width="2dp"
         app:input_text_color="@color/purple_700"
-        app:input_text_size="20sp" />
+        app:input_text_size="60sp" />
 
     <com.fliest.passwordview.NumberInputView
         android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
         app:box_width="48dp"
         app:cursor_color="#69B56D"
         app:cursor_height="20dp"
-        app:cursor_width="2dp"
+        app:cursor_width="30dp"
         app:input_text_color="@color/purple_700"
         app:input_text_size="20sp" />
 
@@ -108,9 +108,45 @@
         app:box_width="48dp"
         app:cursor_color="#69B56D"
         app:cursor_height="20dp"
-        app:cursor_width="2dp"
+        app:cursor_width="30dp"
         app:input_text_color="@color/purple_700"
-        app:input_text_size="20sp" />
+        app:input_text_size="60sp" />
+
+
+
+    <FrameLayout
+        android:layout_width="192dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/purple_200">
+        <com.fliest.passwordview.NumberInputView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSelectHandle="@drawable/shape_text_select_handle"
+            android:textSelectHandleLeft="@drawable/shape_text_select_handle"
+            android:textSelectHandleRight="@drawable/shape_text_select_handle"
+            app:box_corner="5dp"
+            app:box_count="4"
+            app:box_height="48dp"
+            app:box_margin="0dp"
+            app:box_stroke_color="#BBBBBB"
+            app:box_stroke_width="3dp"
+            app:box_style_type="stroke"
+            app:box_width="48dp"
+            app:cursor_color="#69B56D"
+            app:cursor_height="20dp"
+            app:cursor_width="30dp"
+            app:input_text_color="@color/purple_700"
+            app:input_text_size="60sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSelectHandle="@drawable/shape_text_select_handle"
+            android:textSelectHandleLeft="@drawable/shape_text_select_handle"
+            android:textSelectHandleRight="@drawable/shape_text_select_handle" />
+    </FrameLayout>
 
 
     <com.fliest.passwordview.PasswordView
@@ -124,7 +160,7 @@
         app:box_count="6"
         app:box_fill_color="@color/purple_200"
         app:box_height="48dp"
-        app:box_margin="10dp"
+        app:box_margin="0dp"
         app:box_stroke_color="#69B56D"
         app:box_stroke_width="3dp"
         app:box_style_type="stroke"
@@ -133,24 +169,11 @@
         app:cursor_height="20dp"
         app:cursor_width="2dp"
         app:input_text_color="@color/purple_700"
-        app:input_text_size="12sp"
+        app:input_text_size="60sp"
         app:pwd_cover_color="@color/teal_700"
-        app:pwd_cover_dot_radius="5dp"
-        app:pwd_cover_star_size="20sp"
+        app:pwd_cover_dot_radius="20dp"
+        app:pwd_cover_star_size="60sp"
         app:pwd_cover_type="star" />
 
-    <FrameLayout
-        android:layout_width="338dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="50dp"
-        android:background="@color/purple_200">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSelectHandle="@drawable/shape_text_select_handle"
-            android:textSelectHandleLeft="@drawable/shape_text_select_handle"
-            android:textSelectHandleRight="@drawable/shape_text_select_handle" />
-    </FrameLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

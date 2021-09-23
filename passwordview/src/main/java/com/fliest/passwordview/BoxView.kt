@@ -22,7 +22,7 @@ class BoxView {
         }
     }
 
-    private fun drawBoxWithMargin(canvas: Canvas, attributes: BaseInputView, paint: Paint){
+    private fun drawBoxWithMargin(canvas: Canvas, attributes: BaseInputView, paint: Paint) {
         var left = attributes.boxStrokeWidth / 2.0f
         val top = attributes.boxStrokeWidth / 2.0f
         var right = attributes.boxWidth - left
@@ -36,14 +36,22 @@ class BoxView {
     }
 
     private fun drawBoxWithoutMargin(canvas: Canvas, attributes: BaseInputView) {
+
         val left = attributes.boxStrokeWidth / 2.0f
         val top = attributes.boxStrokeWidth / 2.0f
         val right = attributes.width - attributes.boxStrokeWidth / 2.0f
         val bottom = attributes.height - attributes.boxStrokeWidth / 2.0f
         canvas.drawRoundRect(left, top, right, bottom, attributes.boxCorner, attributes.boxCorner, attributes.boxPaint)
 
+        val totalWidth = attributes.width
+        val innerTotalWidth = totalWidth - attributes.boxStrokeWidth * (attributes.boxCount + 1)
+        val avgWidth = innerTotalWidth / (attributes.boxCount * 1.0f)
+
         for (i in 1 until attributes.boxCount) {
-            canvas.drawLine(left + attributes.boxWidth * i, attributes.boxStrokeWidth, left + attributes.boxWidth * i, attributes.height - attributes.boxStrokeWidth, attributes.boxPaint)
+            canvas.drawLine((attributes.boxStrokeWidth + avgWidth) * i + attributes.boxStrokeWidth / 2.0f, attributes.boxStrokeWidth,
+                (attributes.boxStrokeWidth + avgWidth) * i + attributes.boxStrokeWidth / 2.0f,
+                attributes.height - attributes.boxStrokeWidth,
+                attributes.boxPaint)
         }
     }
 
