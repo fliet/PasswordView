@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="NumberInputView">
+    <declare-styleable name="BaseInputView">
         <attr name="box_width" format="dimension"/>
         <attr name="box_height" format="dimension"/>
         <attr name="box_count" format="integer"/>
@@ -19,9 +19,14 @@
         <attr name="input_text_size" format="dimension"/>
         <attr name="input_text_color" format="color"/>
 
+        <attr name="cursor_type" format="enum">
+            <enum name="cursor_type_line" value="1"/>
+            <enum name="cursor_type_follow_box" value="2"/>
+        </attr>
         <attr name="cursor_height" format="dimension"/>
         <attr name="cursor_width" format="dimension"/>
         <attr name="cursor_color" format="color"/>
+        <attr name="cursor_twinkle" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="PasswordView">

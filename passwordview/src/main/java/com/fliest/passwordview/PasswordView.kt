@@ -16,10 +16,12 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 
-/*
-    关闭复制粘贴功能
-    屏蔽EditText select handle
-    密码输入动效
+/**
+ * 密码输入框
+ * 自定义输入框示例
+ *
+ * @author: fliest
+ * @date: 2021-09-14 08:38:03
  */
 open class PasswordView(context: Context, private val attrs: AttributeSet) :
     NumberInputView(context, attrs) {
@@ -52,6 +54,7 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
 
     private fun initAttrs() {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PasswordView)
+
         dotRadius =
             typedArray.getDimension(R.styleable.PasswordView_pwd_cover_dot_radius, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, Resources.getSystem().displayMetrics))
         pwdCoverType =
@@ -60,6 +63,7 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
             typedArray.getColor(R.styleable.PasswordView_pwd_cover_color, Color.parseColor("#BBBBBB"))
         pwdCoverStarSize =
             typedArray.getDimension(R.styleable.PasswordView_pwd_cover_star_size, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10f, Resources.getSystem().displayMetrics))
+
         typedArray.recycle()
     }
 
@@ -107,7 +111,6 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
         } else {
             drawTextWithMargin(canvas)
         }
-
     }
 
     private fun drawTextWithoutMargin(canvas: Canvas) {
@@ -115,7 +118,6 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
         val totalWidth = width
         val innerTotalWidth = totalWidth - boxStrokeWidth * (boxCount + 1)
         val avgWidth = innerTotalWidth / (boxCount * 1.0f)
-
 
         val height = height
         val cy = height / 2f
@@ -157,13 +159,10 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
     }
 
     private fun drawCoverDot(canvas: Canvas) {
-
-        if (boxMargin == 0f) {
+        if (boxMargin == 0f)
             drawCoverDotWithoutMargin(canvas)
-        } else {
+        else
             drawCoverDotWithMargin(canvas)
-        }
-
     }
 
     private fun drawCoverDotWithMargin(canvas: Canvas) {
@@ -199,8 +198,6 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
         } else {
             drawCoverStarWithMargin(canvas)
         }
-
-
     }
 
     private fun drawCoverStarWithMargin(canvas: Canvas) {
