@@ -15,6 +15,9 @@ import android.util.TypedValue
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
+import com.fliest.passwordview.base.ITextView
+import com.fliest.passwordview.textview.PasswordCoverTextView
+import com.fliest.passwordview.textview.PlaintTextView
 
 /**
  * 密码输入框
@@ -27,24 +30,27 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
     NumberInputView(context, attrs) {
 
     companion object {
-        private const val INPUT_STATE_DELETE = -1
-        private const val INPUT_STATE_IDLE = 0
-        private const val INPUT_STATE_INIT = 1
-        private const val INPUT_STATE_ADD = 2
+        const val INPUT_STATE_DELETE = -1
+        const val INPUT_STATE_IDLE = 0
+        const val INPUT_STATE_INIT = 1
+        const val INPUT_STATE_ADD = 2
     }
 
-    private var inputState = INPUT_STATE_INIT
-    private var coverCount = 0
+    var inputState = INPUT_STATE_INIT
+    var coverCount = 0
 
-    private var dotRadius = 10f
-    private var pwdCoverType = PWD_COVER_TYPE_DOT
-    private var pwdCoverColor: Int = 0
-    private var pwdCoverStarSize = 10f
+    var dotRadius = 10f
+    var pwdCoverType = PWD_COVER_TYPE_DOT
+    var pwdCoverColor: Int = 0
+    var pwdCoverStarSize = 10f
 
-    private lateinit var dotPaint: Paint
-    private lateinit var starPaint: Paint
+    lateinit var dotPaint: Paint
+    lateinit var starPaint: Paint
+
+    val rect = Rect()
     private val delayTimeHandler = DelayTimeHandler()
-    private val rect = Rect()
+    private val plaintTextView: ITextView = PlaintTextView()
+    private val passwordCoverTextView: ITextView = PasswordCoverTextView()
 
     init {
         initAttrs()
@@ -99,141 +105,11 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
 
     override fun onDrawText(canvas: Canvas, textPaint: Paint) {
         if (inputState != INPUT_STATE_INIT)
-            drawPasswordCover(canvas, textPaint)
+            passwordCoverTextView.drawText(canvas, this)
 
         if (inputState == INPUT_STATE_ADD)
-            drawPlaintext(canvas, textPaint)
+            plaintTextView.drawText(canvas, this)
     }
-
-    private fun drawPlaintext(canvas: Canvas, textPaint: Paint) {
-        if (boxMargin == 0f) {
-            drawTextWithoutMargin(canvas)
-        } else {
-            drawTextWithMargin(canvas)
-        }
-    }
-
-    private fun drawTextWithoutMargin(canvas: Canvas) {
-
-        val totalWidth = width
-        val innerTotalWidth = totalWidth - boxStrokeWidth * (boxCount + 1)
-        val avgWidth = innerTotalWidth / (boxCount * 1.0f)
-
-        val height = height
-        val cy = height / 2f
-
-        val index = charList.size - 1
-        val text = charList[index].toString()
-        val dx: Float = textPaint.measureText("8") / 2.0f
-        textPaint.getTextBounds("8", 0, 1, rect)
-
-        val dy: Float = (rect.top + rect.bottom) / 2.0f
-        val left = boxStrokeWidth * (index + 1) + avgWidth * index
-        val startX: Float = left + avgWidth / 2
-
-        canvas.drawText(text, startX - dx, cy - dy, textPaint)
-    }
-
-    private fun drawTextWithMargin(canvas: Canvas) {
-        var left = 0f
-        val height = height
-        val cy = height / 2f
-
-        val index = charList.size - 1
-        val text = charList[index].toString()
-        val dx: Float = textPaint.measureText("8") / 2.0f
-        textPaint.getTextBounds("8", 0, 1, rect)
-
-        val dy: Float = (rect.top + rect.bottom) / 2.0f
-        if (index != 0) left += (boxMargin + boxWidth) * index
-        val startX: Float = left + boxWidth / 2
-
-        canvas.drawText(text, startX - dx, cy - dy, textPaint)
-    }
-
-    private fun drawPasswordCover(canvas: Canvas, textPaint: Paint) {
-        if (pwdCoverType == PWD_COVER_TYPE_DOT)
-            drawCoverDot(canvas)
-        else if (pwdCoverType == PWD_COVER_TYPE_STAR)
-            drawCoverStar(canvas, textPaint)
-    }
-
-    private fun drawCoverDot(canvas: Canvas) {
-        if (boxMargin == 0f)
-            drawCoverDotWithoutMargin(canvas)
-        else
-            drawCoverDotWithMargin(canvas)
-    }
-
-    private fun drawCoverDotWithMargin(canvas: Canvas) {
-        var left = boxStrokeWidth / 2
-        val height = height
-        val cy = height / 2f
-        for (i in 0 until coverCount) {
-            if (i != 0) left += (boxMargin + boxWidth)
-            val startX = left + boxWidth / 2
-            canvas.drawCircle(startX, cy, dotRadius, dotPaint)
-        }
-    }
-
-    private fun drawCoverDotWithoutMargin(canvas: Canvas) {
-        val totalWidth = width
-        val innerTotalWidth = totalWidth - boxStrokeWidth * (boxCount + 1)
-        val avgWidth = innerTotalWidth / (boxCount * 1.0f)
-
-        var startX = boxStrokeWidth + avgWidth / 2
-        val height = height
-        val cy = height / 2f
-        for (i in 0 until coverCount) {
-            canvas.drawCircle(startX, cy, dotRadius, dotPaint)
-            startX += boxStrokeWidth + avgWidth
-        }
-    }
-
-    private fun drawCoverStar(canvas: Canvas, textPaint: Paint) {
-        if (charList.size == 0) return
-
-        if (boxMargin == 0f) {
-            drawCoverStarWithoutMargin(canvas)
-        } else {
-            drawCoverStarWithMargin(canvas)
-        }
-    }
-
-    private fun drawCoverStarWithMargin(canvas: Canvas) {
-        var left = 0f
-        var startX: Float = left + boxWidth / 2.0f
-        val cy = height / 2.0f
-        val dx: Float = starPaint.measureText("*") / 2.0f
-        starPaint.getTextBounds("*", 0, 1, rect)
-        val dy: Float = (rect.top + rect.bottom) / 2.0f
-
-        for (i in 0 until coverCount) {
-            canvas.drawText("*", startX - dx, cy - dy, starPaint)
-            left += boxMargin + boxWidth
-            startX = left + boxWidth / 2.0f
-        }
-    }
-
-    private fun drawCoverStarWithoutMargin(canvas: Canvas) {
-        val totalWidth = width
-        val innerTotalWidth = totalWidth - boxStrokeWidth * (boxCount + 1)
-        val avgWidth = innerTotalWidth / (boxCount * 1.0f)
-
-        var left = boxStrokeWidth
-        var startX: Float = left + avgWidth / 2.0f
-        val cy = height / 2.0f
-        val dx: Float = starPaint.measureText("*") / 2.0f
-        starPaint.getTextBounds("*", 0, 1, rect)
-        val dy: Float = (rect.top + rect.bottom) / 2.0f
-
-        for (i in 0 until coverCount) {
-            canvas.drawText("*", startX - dx, cy - dy, starPaint)
-            left += avgWidth + boxStrokeWidth
-            startX = left + avgWidth / 2.0f
-        }
-    }
-
 
     override fun onTextChange(s: CharSequence, start: Int, before: Int, count: Int) {
         val preNumListCount = charList.size
@@ -257,6 +133,13 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
         onInputFinishListener?.takeIf { currNumListCount == boxCount }?.onInputFinish(s.toString())
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        charList.clear()
+
+        delayTimeHandler.removeCallbacksAndMessages(null)
+    }
+
     @SuppressLint("HandlerLeak")
     inner class DelayTimeHandler : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
@@ -265,13 +148,6 @@ open class PasswordView(context: Context, private val attrs: AttributeSet) :
             coverCount = charList.size
             inputState = INPUT_STATE_IDLE
         }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        charList.clear()
-
-        delayTimeHandler.removeCallbacksAndMessages(null)
     }
 
 }

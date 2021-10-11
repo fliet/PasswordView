@@ -14,10 +14,15 @@ import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.fliest.passwordview.*
-import com.fliest.passwordview.cursor.BoxCursorView
-import com.fliest.passwordview.cursor.DefaultCursorView
-import com.fliest.passwordview.cursor.FillBoxCursorView
-import com.fliest.passwordview.cursor.UnderlineCursorView
+import com.fliest.passwordview.boxview.DefaultBoxView
+import com.fliest.passwordview.cursorview.BoxCursorView
+import com.fliest.passwordview.cursorview.DefaultCursorView
+import com.fliest.passwordview.cursorview.FillBoxCursorView
+import com.fliest.passwordview.cursorview.UnderlineCursorView
+import com.fliest.passwordview.interf.InputViewDrawEvent
+import com.fliest.passwordview.interf.OnInputFinishListener
+import com.fliest.passwordview.interf.TextWatcherImpl
+import com.fliest.passwordview.textview.DefaultTextView
 import java.util.*
 
 /**
@@ -125,8 +130,8 @@ open class BaseInputView : AppCompatEditText, InputViewDrawEvent {
 
     private val cursorViewList =
         listOf(DefaultCursorView(), BoxCursorView(), UnderlineCursorView(), FillBoxCursorView())
-    private val defaultBoxView: BaseBoxView = DefaultBoxView()
-    private val defaultTextView: BaseTextView = DefaultTextView()
+    private val defaultBoxView: IBoxView = DefaultBoxView()
+    private val defaultTextView: ITextView = DefaultTextView()
 
     internal val charList: MutableList<Char> = ArrayList()
     var onInputFinishListener: OnInputFinishListener? = null
